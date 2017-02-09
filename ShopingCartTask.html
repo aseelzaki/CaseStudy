@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UAE Shopping</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script data-require="ui-router@0.2.8" data-semver="0.2.8" src="http://angular-ui.github.io/ui-router/release/angular-ui-router.js"></script>
+
+</head>
+<body ng-app="shoppingApp" data-ng-controller="shoppingController">
+<div class="container">
+    <div class="navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#"><img border="0" src="shoppingCart.png" width="50" height="50"></a>
+            </div>
+            <ul class="nav navbar-nav navbar-left"><li><a href="#">Shopping Cart Website</a></li></ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="navbar-form">
+                    <div class="form-group">
+                        <select class="form-control" ng-model="country">
+                            <option value="Emirates">Emirates</option>
+                            <option value="Jordan">Jordan</option>
+                            <option value="Qatar">Qatar</option>
+                        </select>
+                    </div>
+                </li>
+                <li><a href="#">Home</a></li>
+                <li><a>Any Help?</a></li>
+                <li><a href="#" data-target="#checkout" data-toggle="modal">SignIn</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div>Product Category</div>
+            <ul class="list-group">
+                <li class="list-group-item">Women</li>
+                <li class="list-group-item">Men</li>
+                <li class="list-group-item">Kids</li>
+                <li class="list-group-item">Home</li>
+                <li class="list-group-item">Mobiles</li>
+                <li class="list-group-item">Tablets</li>
+            </ul>
+        </div>
+        <div class="col-sm-10">
+            <div ng-repeat="product in products" class="col-sm-4 thumbnail">
+                <img width="140" height="200" src="{{product.image}}">
+                <div class="caption">
+                    <div class="row">
+                        <p class="col-sm-6">{{product.name}}</p>
+                        <p class="col-sm-6 text-right">{{product.price}} AED</p>
+                        <p class="col-sm-12">Available Items {{findProduct(products,product).quantity - findProduct(wantedItems,product).quantity}}</p>
+                    </div>
+                    <button class="btn btn-primary" ng-click="add(product)" ng-disabled="!(findProduct(products,product).quantity - findProduct(wantedItems,product).quantity)" data-toggle="modal" data-target="#summary" >Add to cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="summary">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">You have request : </div>
+            </div>
+            <div class="modal-body">
+                <div ng-repeat="item in wantedItems">
+                    <p><strong>{{item.name}}</strong></p>
+                    <p>product category : {{item.Category}}</p>
+                    <p>Quantity : {{item.quantity}}</p>
+                    <img src="{{item.image}}" width="50" height="50">
+                    <button class="btn text-right" ng-click="deleteItem(item)">Delete</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-target="#checkout" data-toggle="modal">checkout</button>
+                <button class="btn" ng-click="calculatePrice()">Price?</button>
+                <button class="btn" data-dismiss="modal">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="checkout">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">please signIn or signUp to continue your purchase</div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="label-form" for="username">User Name {{firstName}}</label>
+                        <input type="text" class="form-control" placeholder="username" id="username" ng-model="username">
+                    </div>
+                    <div class="col-sm-12">
+                        <label for="password">Password</label>
+                        <input class="form-control" type="text" id="password" placeholder="Password" ng-model="password">
+                    </div>
+
+                    <div class="col-sm-12">
+                        <button class="btn" ng-click="authenticate(username,password)">SignIn</button>
+                        <a  href="signUpPage.html"> or SignUp</a>
+                    </div>
+                </div>
+                <p ng-show="invalidUser">You enter Invalid credential please try again</p>
+                <p ng-show="invalidUser">Ps:use for test aseel,aseel</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var shoppingApp = angular.module("shoppingApp",['ui.router']);
+    shoppingApp.controller('shoppingController',['$http','$scope','$state',function($http,$scope,products) {
+        $scope.wantedItems = [];
+
+        $scope.country = "Emirates";
+
+        $http.get("products").then(function (data) {
+            $scope.products = data.data.products;
+        });
+
+        $scope.add = function (product) {
+            var flag = false;
+            for (var c = 0; c < $scope.wantedItems.length; c++) {
+                if ($scope.wantedItems[c].id == product.id) {
+                    $scope.wantedItems[c].quantity = $scope.wantedItems[c].quantity + 1;
+                    flag = true;
+                }
+            }
+            if (!flag) {
+                var cc = JSON.parse(JSON.stringify(product));
+                cc.quantity = 1;
+                $scope.wantedItems.push(cc);
+            }
+            localStorage.setItem("storedItems", JSON.stringify($scope.wantedItems));
+        };
+
+        $scope.deleteItem = function (product) {
+            for (var c = 0; c < $scope.wantedItems.length; c++) {
+                if ($scope.wantedItems[c].id == product.id) {
+                    if ($scope.wantedItems[c].quantity > 1) {
+                        $scope.wantedItems[c].quantity--;
+                    } else {
+                        $scope.wantedItems.splice(c,1)
+                    }
+                }
+            }
+            localStorage.setItem("storedItems", JSON.stringify($scope.wantedItems));
+        };
+
+        $scope.calculatePrice = function () {
+            var sum = 0;
+            var tax = 0;
+            switch ($scope.country) {
+                case "Emirates":
+                    tax = 200;
+                    break;
+                case "Qatar":
+                    tax = 400;
+                    break;
+                case "Jordan":
+                    tax = 300;
+                    break
+            }
+            for (var c = 0; c < $scope.wantedItems.length; c++) {
+                sum = sum + $scope.wantedItems[c].quantity * $scope.wantedItems[c].price;
+            }
+            alert("The Total Price is : " + (sum + tax + sum * 0.02) + "AED");
+        };
+
+        $scope.findProduct = function (arr,item) {
+            for (var c = 0; c < arr.length; c++) {
+                if (arr[c].id == item.id) {
+                    return arr[c];
+                }
+            }
+        };
+
+        $scope.authenticate = function(userName,password){
+
+            $http.get("users").then(function (data) {
+                $scope.users = data.data.users;
+                var flag = false;
+                for (var c = 0; c < $scope.users.length; c++){
+                    if($scope.users[c].username == userName && $scope.users[c].password == password ){
+                        alert("Congratulations You selected products will be delivered to you soon");
+                        flag  = true;
+                    }
+                }
+                if(!flag){
+                    $scope.invalidUser = true;
+                }
+            });
+        }
+
+    }]);
+</script>
+</body>
+</html>

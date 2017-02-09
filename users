@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "aseel",
+      "password": "aseel",
+      "creditId": "123456",
+      "sex": "female",
+      "location": "Sharjah",
+      "building": "hala",
+      "mobile": "12344556754"
+    }
+  ]
+}

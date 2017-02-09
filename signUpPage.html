@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SignUp</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script data-require="ui-router@0.2.8" data-semver="0.2.8" src="http://angular-ui.github.io/ui-router/release/angular-ui-router.js"></script>
+
+</head>
+<body ng-app="signUpApp" data-ng-controller="signUpController">
+<div class="modal" id="summary">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">You asked for the following products</div>
+            </div>
+            <div class="modal-body">
+                <div ng-repeat="item in wantedItems">
+                    <p><strong>{{item.name}}</strong></p>
+                    <p>product category : {{item.Category}}</p>
+                    <p>Quantity : {{item.quantity}}</p>
+                    <img src="{{item.image}}" width="50" height="50">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#summary">check my Items</button>
+</div>
+<script>
+
+    var signUpApp = angular.module("signUpApp",['ui.router']);
+    signUpApp.controller('signUpController',['$http','$scope','$state',function($http,$scope) {
+        $scope.wantedItems = JSON.parse(localStorage.getItem("storedItems"));
+
+    }]);
+
+</script>
+</body>
+</html>

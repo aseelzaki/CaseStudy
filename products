@@ -1,0 +1,52 @@
+{
+  "products": [
+    {
+      "id":1,
+      "name": "Red Dress",
+      "Category": "Women",
+      "price": "100",
+      "image":"dress8.jpg",
+      "quantity":2
+    },
+    {
+      "id":2,
+      "name": "Green Dress",
+      "Category": "Women",
+      "price": "190",
+      "image":"dress1.jpg",
+      "quantity":2
+    },
+    {
+      "id":3,
+      "name": "Blue Dress",
+      "Category": "Women",
+      "price": "180",
+      "image":"dress3.jpg",
+      "quantity":2
+    },
+    {
+      "id":4,
+      "name": "Black Dress",
+      "Category": "Women",
+      "price": "180",
+      "image":"dress5.jpg",
+      "quantity":2
+    },
+    {
+      "id":5,
+      "name": "Yellow Dress",
+      "Category": "Women",
+      "price": "160",
+      "image":"dress7.jpg",
+      "quantity":3
+    },
+    {
+      "id":6,
+      "name": "Pink Dress",
+      "Category": "Women",
+      "price": "180",
+      "image":"dress6.jpg",
+      "quantity":3
+    }
+  ]
+}
