@@ -14,3 +14,4 @@ To sign In Use the following credentials:
 -	Username: aseel
 The sign Up page is dummy Page only contains the expected behavior, and you can check you wanted items from it (JS local storage used here)
 The products and users are saved in JSON files
+the main page is shoppingCartTask.html
